@@ -5,6 +5,16 @@
   "author": {
     "name": "gustavocadev"
   },
+  "keywords": [
+    "qwik",
+    "lucia",
+    "lucia-auth",
+    "auth",
+    "authentication",
+    "qwik-city",
+    "qwik-lucia",
+    "lucia-qwik"
+  ],
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
