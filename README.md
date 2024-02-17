@@ -44,8 +44,8 @@ declare module 'lucia' {
 ## Installation
 
 ```sh
-npm i lucia
-pnpm add lucia
-bun add lucia
-yarn add lucia
+npm i qwik-lucia
+pnpm add qwik-lucia
+bun add qwik-lucia
+yarn add qwik-lucia
 ```
