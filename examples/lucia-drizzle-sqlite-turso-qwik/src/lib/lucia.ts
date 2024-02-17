@@ -20,7 +20,7 @@ export const lucia = new Lucia(adapter, {
   },
 });
 
-// IMPORTANT! Configure Qwik to use Lucia for handling requests
+// IMPORTANT! Here we need to use `qwikLuciaConfig` to correctly configure the `handleRequest` function
 export const { handleRequest } = qwikLuciaConfig(lucia);
 
 // IMPORTANT!
