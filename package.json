@@ -51,7 +51,8 @@
     "release": "release-it",
     "start": "vite --open --mode ssr",
     "test": "echo \"No test specified\" && exit 0",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "prepublishOnly": "qwik build"
   },
   "devDependencies": {
     "@builder.io/qwik": "1.4.5",
