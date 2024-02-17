@@ -70,8 +70,8 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "peerDependencies": {
-    "@builder.io/qwik": "1.4.5",
-    "@builder.io/qwik-city": "1.4.5",
-    "lucia": "3.0.1"
+    "@builder.io/qwik": "^1.4.5",
+    "@builder.io/qwik-city": "^1.4.5",
+    "lucia": "^3.0.1"
   }
 }
