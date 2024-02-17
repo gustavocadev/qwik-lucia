@@ -1,8 +1,11 @@
 import { varchar, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { generateId } from "lucia";
 
 // Docs: https://lucia-auth.com/database/drizzle
 export const userTable = pgTable("user", {
-  id: text("id").primaryKey(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => generateId(15)),
   password: text("password").notNull(),
   username: text("username").notNull(),
   // other user attributes
