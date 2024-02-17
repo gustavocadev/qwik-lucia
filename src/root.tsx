@@ -1,6 +1,3 @@
-import { Counter } from "./components/counter/counter";
-import { Logo } from "./components/logo/logo";
-
 export default () => {
   return (
     <>
@@ -9,8 +6,13 @@ export default () => {
         <title>Qwik Blank App</title>
       </head>
       <body>
-        <Logo />
-        <Counter />
+        <section>
+          <h1>Welcome to Qwik</h1>
+          <p>
+            This is a blank Qwik app. You can start by editing the files in the
+            <code>src/</code> directory.
+          </p>
+        </section>
       </body>
     </>
   );
