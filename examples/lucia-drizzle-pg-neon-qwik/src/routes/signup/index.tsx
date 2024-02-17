@@ -8,12 +8,11 @@ import {
   routeLoader$,
   Link,
 } from "@builder.io/qwik-city";
-import { generateId } from "lucia";
 import pg from "pg";
-import { Argon2id } from "oslo/password";
 import { db } from "~/lib/db";
 import { userTable } from "~/lib/schema";
 import { handleRequest } from "~/lib/lucia";
+import { hashPassword } from "qwik-lucia";
 
 export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = handleRequest(event);
@@ -28,13 +27,11 @@ export const useUserLoader = routeLoader$(async (event) => {
 export const useSignupUser = routeAction$(
   async (values, event) => {
     try {
-      const hashPassword = await new Argon2id().hash(values.password);
-      const userId = generateId(15);
+      const passwordHash = await hashPassword(values.password);
 
       await db.insert(userTable).values({
-        id: userId,
         username: values.username,
-        password: hashPassword,
+        password: passwordHash,
       });
     } catch (e) {
       if (
