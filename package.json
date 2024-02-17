@@ -1,7 +1,7 @@
 {
   "name": "qwik-lucia",
   "version": "0.1.0",
-  "description": "Qwik Lucia Auth integration",
+  "description": "Quickly and easily integrate Qwik with Lucia Auth for a straightforward and speedy setup",
   "author": {
     "name": "gustavocadev"
   },
@@ -19,6 +19,7 @@
     "type": "git",
     "url": "https://github.com/gustavocadev/qwik-lucia"
   },
+  "license": "MIT",
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
