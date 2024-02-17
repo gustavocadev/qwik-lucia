@@ -1,6 +1,6 @@
 {
   "name": "qwik-lucia",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Quickly and easily integrate Qwik with Lucia Auth for a straightforward and speedy setup",
   "author": {
     "name": "gustavocadev"
