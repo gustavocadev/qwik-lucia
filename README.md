@@ -29,6 +29,7 @@ export const lucia = new Lucia(adapter, {
   },
 });
 
+// IMPORTANT! Here we need to use `qwikLuciaConfig` to correctly configure the `handleRequest` function
 export const { handleRequest } = qwikLuciaConfig(lucia);
 
 // IMPORTANT!
@@ -38,4 +39,13 @@ declare module 'lucia' {
     DatabaseUserAttributes: Omit<SelectUser, 'id'>;
   }
 }
+```
+
+## Installation
+
+```sh
+npm i lucia
+pnpm add lucia
+bun add lucia
+yarn add lucia
 ```
