@@ -9,8 +9,8 @@ import {
   Link,
 } from "@builder.io/qwik-city";
 import { eq } from "drizzle-orm";
-import { Argon2id } from "oslo/password";
 import pg from "pg";
+import { verifyPassword } from "qwik-lucia";
 import { db } from "~/lib/db";
 import { handleRequest, lucia } from "~/lib/lucia";
 import { userTable } from "~/lib/schema";
@@ -48,7 +48,7 @@ export const useLoginAction = routeAction$(
       }
 
       // 3. validate password
-      const isValidPassword = await new Argon2id().verify(
+      const isValidPassword = await verifyPassword(
         user.passwordHash,
         values.password,
       );
