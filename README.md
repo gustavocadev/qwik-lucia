@@ -11,7 +11,7 @@ import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { db } from './db';
 import { sessionTable, userTable, SelectUser } from './schema';
 import { Lucia } from 'lucia';
-import { qwikLuciaConfig } from '~/utils/handleRequest';
+import { qwikLuciaConfig } from 'qwik-lucia';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
