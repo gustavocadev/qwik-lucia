@@ -15,6 +15,10 @@
     "qwik-lucia",
     "lucia-qwik"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gustavocadev/qwik-lucia"
+  },
   "main": "./lib/index.qwik.mjs",
   "qwik": "./lib/index.qwik.mjs",
   "types": "./lib-types/index.d.ts",
