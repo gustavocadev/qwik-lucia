@@ -1,47 +1,41 @@
-# Qwik Library ⚡️
+# Qwik Lucia
 
-- [Qwik Docs](https://qwik.builder.io/)
-- [Discord](https://qwik.builder.io/chat)
-- [Qwik on GitHub](https://github.com/BuilderIO/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
-- [Partytown](https://partytown.builder.io/)
-- [Mitosis](https://github.com/BuilderIO/mitosis)
-- [Builder.io](https://www.builder.io/)
+Qwik Lucia is a library that helps you to integrate [Lucia](https://lucia-auth.com/) with your Qwik project.
 
----
+- No more configuration
+- Fully typed
+- Extensive database support out of the box
 
-## Project Structure
+```ts
+import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
+import { db } from './db';
+import { sessionTable, userTable, SelectUser } from './schema';
+import { Lucia } from 'lucia';
+import { qwikLuciaConfig } from '~/utils/handleRequest';
 
-Inside your project, you'll see the following directories and files:
+const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
-```
-├── public/
-│   └── ...
-└── src/
-    ├── components/
-    │   └── ...
-    └── index.ts
-```
+export const lucia = new Lucia(adapter, {
+  sessionCookie: {
+    attributes: {
+      // set to `true` when using HTTPS
+      secure: process.env.NODE_ENV === 'production',
+    },
+  },
+  getUserAttributes: (attributes) => {
+    return {
+      username: attributes.username,
+    };
+  },
+});
 
-- `src/components`: Recommended directory for components.
+export const { handleRequest } = qwikLuciaConfig(lucia);
 
-- `index.ts`: The entry point of your component library, make sure all the public components are exported from this file.
-
-## Development
-
-Development mode uses [Vite's development server](https://vitejs.dev/). For Qwik during development, the `dev` command will also server-side render (SSR) the output. The client-side development modules are loaded by the browser.
-
-```
-pnpm dev
-```
-
-> Note: during dev mode, Vite will request many JS files, which does not represent a Qwik production build.
-
-## Production
-
-The production build should generate the production build of your component library in (./lib) and the typescript type definitions in (./lib-types).
-
-```
-pnpm build
+// IMPORTANT!
+declare module 'lucia' {
+  interface Register {
+    Lucia: typeof lucia;
+    DatabaseUserAttributes: Omit<SelectUser, 'id'>;
+  }
+}
 ```
