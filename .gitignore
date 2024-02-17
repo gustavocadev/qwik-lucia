@@ -10,6 +10,10 @@
 # Development
 node_modules
 
+bun.lockb
+pnpm-lock.yaml
+yarn.lock
+
 # Cache
 .cache
 .mf
