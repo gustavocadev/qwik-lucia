@@ -16,7 +16,7 @@ import { handleRequest, lucia } from '~/lib/lucia';
 
 export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = handleRequest(event);
-  const session = await authRequest.validateUser();
+  const { session } = await authRequest.validateUser();
   if (session) {
     throw event.redirect(303, '/');
   }
