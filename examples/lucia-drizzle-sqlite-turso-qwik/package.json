@@ -55,7 +55,6 @@
     "@lucia-auth/adapter-sqlite": "^3.0.0",
     "drizzle-orm": "^0.29.3",
     "lucia": "^3.0.1",
-    "oslo": "^1.1.1",
-    "qwik-lucia": "^0.3.0"
+    "qwik-lucia": "^0.4.0"
   }
 }

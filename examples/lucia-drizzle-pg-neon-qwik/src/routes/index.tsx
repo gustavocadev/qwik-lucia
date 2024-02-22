@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { Form, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
-import { handleRequest, lucia } from "~/lib/lucia";
+import { handleRequest } from "~/lib/lucia";
 
 export const useUserLoader = routeLoader$(async (event) => {
   const authRequest = handleRequest(event);
@@ -18,9 +18,8 @@ export const useLogoutUserAction = routeAction$(async (values, event) => {
 
   if (!session) throw event.redirect(302, "/login");
 
-  // logout user
-  await lucia.invalidateSession(session.id);
-  await authRequest.logout();
+  // Remove the session from the database and from the cookie - Logout
+  await authRequest.invalidateSessionCookie(session);
 
   throw event.redirect(302, "/login");
 });
