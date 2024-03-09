@@ -57,7 +57,7 @@ declare module 'lucia' {
 }
 ```
 
-### Get Users
+### Set `user` and `session` in SharedMap on every request using `onRequest` handler
 
 ```tsx
 // src/routes/layout.tsx
