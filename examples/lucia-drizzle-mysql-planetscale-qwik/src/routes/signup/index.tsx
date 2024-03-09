@@ -14,19 +14,18 @@ import { db } from '~/lib/drizzle/db';
 import { userTable } from '~/lib/drizzle/schema';
 import { handleRequest, lucia } from '~/lib/lucia';
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ sharedMap, redirect }) => {
+  const session = sharedMap.get('session');
   if (session) {
-    throw event.redirect(303, '/');
+    throw redirect(303, '/');
   }
 
   return {};
 });
 
 export const useSignupUser = routeAction$(
-  async (values, event) => {
-    const authRequest = handleRequest(event);
+  async (values, { cookie, redirect }) => {
+    const authRequest = handleRequest({ cookie });
 
     // 1. Hash the password
     const passwordHash = await hashPassword(values.password);
@@ -45,7 +44,7 @@ export const useSignupUser = routeAction$(
     authRequest.setSession(session);
 
     // redirect to home page
-    throw event.redirect(303, '/');
+    throw redirect(303, '/');
   },
   zod$({
     username: z.string().min(2),

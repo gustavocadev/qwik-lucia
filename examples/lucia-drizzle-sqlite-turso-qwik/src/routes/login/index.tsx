@@ -14,20 +14,19 @@ import { db } from "~/lib/db";
 import { handleRequest, lucia } from "~/lib/lucia";
 import { userTable } from "~/lib/schema";
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ sharedMap, redirect }) => {
+  const session = sharedMap.get("session");
 
   if (session) {
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   }
 
   return {};
 });
 
 export const useLoginAction = routeAction$(
-  async (values, event) => {
-    const authRequest = handleRequest(event);
+  async (values, { cookie, fail, redirect }) => {
+    const authRequest = handleRequest({ cookie });
 
     try {
       // 1. find user
@@ -41,7 +40,7 @@ export const useLoginAction = routeAction$(
         .where(eq(userTable.username, values.username));
 
       if (!user) {
-        return event.fail(400, {
+        return fail(400, {
           message: "Incorrect username or password",
         });
       }
@@ -53,7 +52,7 @@ export const useLoginAction = routeAction$(
       );
 
       if (!isValidPassword) {
-        return event.fail(400, {
+        return fail(400, {
           message: "Incorrect username or password",
         });
       }
@@ -64,12 +63,12 @@ export const useLoginAction = routeAction$(
     } catch (e) {
       console.log(e);
 
-      return event.fail(500, {
+      return fail(500, {
         message: "An unknown error occurred",
       });
     }
 
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   },
   zod$({
     username: z.string(),

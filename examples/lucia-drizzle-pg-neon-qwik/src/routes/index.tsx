@@ -2,26 +2,25 @@ import { component$ } from "@builder.io/qwik";
 import { Form, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
 import { handleRequest } from "~/lib/lucia";
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session, user } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ sharedMap, redirect }) => {
+  const session = sharedMap.get('session')
   if (!session) {
-    throw event.redirect(303, "/login");
+    throw redirect(303, "/login");
   }
 
-  return user;
+  return sharedMap.get('user');
 });
 
-export const useLogoutUserAction = routeAction$(async (values, event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useLogoutUserAction = routeAction$(async (values, { sharedMap, redirect, cookie }) => {
+  const authRequest = handleRequest({ cookie });
+  const session = sharedMap.get('session');
 
-  if (!session) throw event.redirect(302, "/login");
+  if (!session) throw redirect(302, "/login");
 
   // Remove the session from the database and from the cookie - Logout
   await authRequest.invalidateSessionCookie(session);
 
-  throw event.redirect(302, "/login");
+  throw redirect(302, "/login");
 });
 
 export default component$(() => {

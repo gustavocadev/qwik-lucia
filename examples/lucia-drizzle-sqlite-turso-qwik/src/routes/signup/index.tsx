@@ -15,21 +15,20 @@ import { handleRequest, lucia } from "~/lib/lucia";
 import { userTable } from "~/lib/schema";
 import { hashPassword } from "qwik-lucia";
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ redirect, sharedMap }) => {
+  const session = sharedMap.get("session");
 
   if (session) {
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   }
 
   return {};
 });
 
 export const useSignupUser = routeAction$(
-  async (values, event) => {
+  async (values, { cookie, fail, redirect }) => {
     try {
-      const authRequest = handleRequest(event);
+      const authRequest = handleRequest({ cookie });
 
       const passwordHash = await hashPassword(values.password);
       const [user] = await db
@@ -47,18 +46,18 @@ export const useSignupUser = routeAction$(
     } catch (e) {
       // check for unique constraint error in user table
       if (e instanceof LibsqlError && e.code === "SQLITE_CONSTRAINT") {
-        return event.fail(400, {
+        return fail(400, {
           message: "Username already taken",
         });
       }
-      return event.fail(500, {
+      return fail(500, {
         message: "An unknown error occurred",
       });
     }
 
     // redirect to
     // make sure you don't throw inside a try/catch block!
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   },
   zod$({
     username: z.string().min(2),

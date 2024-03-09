@@ -15,19 +15,18 @@ import { db } from '~/lib/drizzle/db';
 import { userTable } from '~/lib/drizzle/schema';
 import { handleRequest, lucia } from '~/lib/lucia';
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ sharedMap, redirect }) => {
+  const session = sharedMap.get('session');
   if (session) {
-    throw event.redirect(303, '/');
+    throw redirect(303, '/');
   }
 
   return {};
 });
 
 export const useLoginAction = routeAction$(
-  async (values, event) => {
-    const authRequest = handleRequest(event);
+  async (values, { cookie, fail, redirect }) => {
+    const authRequest = handleRequest({ cookie });
 
     // 1. Find user by username
     const [user] = await db
@@ -37,7 +36,7 @@ export const useLoginAction = routeAction$(
 
     // 2. Check if user exists
     if (!user) {
-      return event.fail(401, {
+      return fail(401, {
         msg: 'Invalid username or password',
       });
     }
@@ -48,7 +47,7 @@ export const useLoginAction = routeAction$(
     );
 
     if (!isPasswordValid) {
-      return event.fail(401, {
+      return fail(401, {
         msg: 'Invalid username or password',
       });
     }
@@ -57,7 +56,7 @@ export const useLoginAction = routeAction$(
     const session = await lucia.createSession(user.id, {});
     authRequest.setSession(session);
 
-    throw event.redirect(303, '/');
+    throw redirect(303, '/');
   },
   zod$({
     username: z.string(),

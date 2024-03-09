@@ -11,21 +11,19 @@ import {
 import pg from "pg";
 import { db } from "~/lib/db";
 import { userTable } from "~/lib/schema";
-import { handleRequest } from "~/lib/lucia";
 import { hashPassword } from "qwik-lucia";
 
-export const useUserLoader = routeLoader$(async (event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useUserLoader = routeLoader$(async ({ redirect, sharedMap }) => {
+  const session = sharedMap.get("session");
   if (session) {
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   }
 
   return {};
 });
 
 export const useSignupUser = routeAction$(
-  async (values, event) => {
+  async (values, { fail, redirect}) => {
     try {
       const passwordHash = await hashPassword(values.password);
 
@@ -38,18 +36,18 @@ export const useSignupUser = routeAction$(
         e instanceof pg.DatabaseError &&
         e.message === "AUTH_DUPLICATE_KEY_ID"
       ) {
-        return event.fail(400, {
+        return fail(400, {
           message: "Username already taken",
         });
       }
-      return event.fail(500, {
+      return fail(500, {
         message: "An unknown error occurred",
       });
     }
 
     // redirect to
     // make sure you don't throw inside a try/catch block!
-    throw event.redirect(303, "/");
+    throw redirect(303, "/");
   },
   zod$({
     username: z.string().min(2),
