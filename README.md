@@ -199,16 +199,14 @@ const session = sharedMap.get('session');
 Example
 
 ```tsx
-export const isUserLoggedIn = routeLoader$(
-  async ({ cookie, sharedMap, redirect }) => {
-    const user = sharedMap.get('user');
-    const session = sharedMap.get('session');
+export const isUserLoggedIn = routeLoader$(async ({ sharedMap, redirect }) => {
+  const user = sharedMap.get('user');
+  const session = sharedMap.get('session');
 
-    if (!user || !session) {
-      throw redirect(302, '/login');
-    }
-
-    return {};
+  if (!user || !session) {
+    throw redirect(302, '/login');
   }
-);
+
+  return {};
+});
 ```
