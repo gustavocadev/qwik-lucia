@@ -179,7 +179,7 @@ import { handleRequest } from '~/server/lucia';
 export const useLogoutUserAction = routeAction$(
   async (values, { cookie, sharedMap, redirect }) => {
     const authRequest = handleRequest({ cookie });
-    const { session } = await sharedMap.get('session');
+    const session = sharedMap.get('session');
 
     if (!session) throw redirect(302, '/login');
 
@@ -194,8 +194,8 @@ export const useLogoutUserAction = routeAction$(
 ### Get User and Session from SharedMap
 
 ```tsx
-const user = await sharedMap.get('user');
-const session = await sharedMap.get('session');
+const user = sharedMap.get('user');
+const session = sharedMap.get('session');
 ```
 
 Example
@@ -206,8 +206,8 @@ import { handleRequest } from '~/server/lucia';
 export const isUserLoggedIn = routeLoader$(
   async ({ cookie, sharedMap, redirect }) => {
     const authRequest = handleRequest({ cookie });
-    const user = await sharedMap.get('user');
-    const session = await sharedMap.get('session');
+    const user = sharedMap.get('user');
+    const session = sharedMap.get('session');
 
     if (!user || !session) {
       throw redirect(302, '/login');
