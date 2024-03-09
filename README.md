@@ -22,7 +22,7 @@ In this example, we will use the `@lucia-auth/adapter-drizzle` adapter to connec
 > For simplicity, we won't show the imports that are not related to the `qwik-lucia` or `lucia` package.
 
 ```ts
-// src/lib/lucia.ts
+// src/server/lucia.ts
 import { Lucia } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import { qwikLuciaConfig } from 'qwik-lucia';
@@ -57,6 +57,24 @@ declare module 'lucia' {
 }
 ```
 
+### Get Users
+
+```tsx
+// src/routes/layout.tsx
+import type { RequestHandler } from '@builder.io/qwik-city';
+import { handleRequest } from '~/server/lucia';
+
+// Run on every request
+export const onRequest: RequestHandler = async ({ cookie, sharedMap }) => {
+  const authRequest = handleRequest({ cookie });
+  const { user, session } = await authRequest.validateUser();
+
+  // share the user and session with the rest of the app
+  sharedMap.set('user', user);
+  sharedMap.set('session', session);
+};
+```
+
 ### Signup
 
 ```tsx
@@ -67,7 +85,7 @@ import { handleRequest, lucia } from "~/lib/lucia";
 import { hashPassword } from 'qwik-lucia';
 
 export const useSignupUser = routeAction$(
-  async (values, event) => {
+  async (values, { redirect }) => {
     try {
       const passwordHash = await hashPassword(values.password);
 
@@ -79,7 +97,7 @@ export const useSignupUser = routeAction$(
       ... // handle error
     }
     // make sure you don't throw inside a try/catch block!
-    throw event.redirect(303, '/');
+    throw redirect(303, '/');
   },
   // validate the input
   zod$({
@@ -93,15 +111,15 @@ export const useSignupUser = routeAction$(
 
 ```tsx
 // src/routes/login/index.tsx
-import { handleRequest, lucia } from "~/lib/lucia";
+import { handleRequest, lucia } from "~/server/lucia";
 
 // This is just a wrapper around the oslo/password library
 import { verifyPassword } from 'qwik-lucia';
 
 export const useLoginAction = routeAction$(
-  async (values, event) => {
+  async (values, { cookie, fail }) => {
     // Important! Use `handleRequest` to handle the authentication request
-    const authRequest = handleRequest(event);
+    const authRequest = handleRequest({ cookie });
 
     try {
       //1. search for user
@@ -116,7 +134,7 @@ export const useLoginAction = routeAction$(
 
       //2. if user is not found, throw error
       if (!user) {
-        return event.fail(400, {
+        return fail(400, {
           message: 'Incorrect username or password',
         });
       }
@@ -128,7 +146,7 @@ export const useLoginAction = routeAction$(
       );
 
       if (!isValidPassword) {
-        return event.fail(400, {
+        return fail(400, {
           message: 'Incorrect username or password',
         });
       }
@@ -155,18 +173,47 @@ export const useLoginAction = routeAction$(
 
 ```tsx
 // src/routes/index.tsx
-import { handleRequest } from './lucia';
+import { handleRequest } from '~/server/lucia';
 
 // Create a user logout action
-export const useLogoutUserAction = routeAction$(async (values, event) => {
-  const authRequest = handleRequest(event);
-  const { session } = await authRequest.validateUser();
+export const useLogoutUserAction = routeAction$(
+  async (values, { cookie, sharedMap, redirect }) => {
+    const authRequest = handleRequest({ cookie });
+    const { session } = await sharedMap.get('session');
 
-  if (!session) throw event.redirect(302, '/login');
+    if (!session) throw redirect(302, '/login');
 
-  // Remove the session from the database and from the cookie - Logout
-  await authRequest.invalidateSessionCookie(session);
+    // Remove the session from the database and from the cookie - Logout
+    await authRequest.invalidateSessionCookie(session);
 
-  throw event.redirect(302, '/login');
-});
+    throw redirect(302, '/login');
+  }
+);
+```
+
+### Get User and Session from SharedMap
+
+```tsx
+const user = await sharedMap.get('user');
+const session = await sharedMap.get('session');
+```
+
+Example
+
+```tsx
+import { handleRequest } from '~/server/lucia';
+
+export const isUserLoggedIn = routeLoader$(
+  async ({ cookie, sharedMap, redirect }) => {
+    const authRequest = handleRequest({ cookie });
+    const user = await sharedMap.get('user');
+    const session = await sharedMap.get('session');
+
+    if (!user || !session) {
+      throw redirect(302, '/login');
+    }
+
+    return {};
+  }
+);
 ```
