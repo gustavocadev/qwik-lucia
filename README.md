@@ -3,8 +3,6 @@
 Qwik Lucia is a library that helps you to integrate [Lucia](https://lucia-auth.com/) with your Qwik project.
 
 - No more configuration
-- Fully typed
-- Extensive database support out of the box
 
 ## Installation
 
