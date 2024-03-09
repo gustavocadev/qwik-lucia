@@ -48,27 +48,29 @@
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check .",
     "lint": "eslint \"src/**/*.ts*\"",
+    "prepublishOnly": "qwik build",
     "release": "release-it",
     "start": "vite --open --mode ssr",
     "test": "echo \"No test specified\" && exit 0",
-    "qwik": "qwik",
-    "prepublishOnly": "qwik build"
+    "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.4.5",
-    "@builder.io/qwik-city": "1.4.5",
+    "@builder.io/qwik": "1.5.1",
+    "@builder.io/qwik-city": "1.5.1",
     "@types/eslint": "^8.56.2",
     "@types/node": "^20.11.6",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
+    "@vitest/ui": "^0.34.6",
     "eslint": "^8.56.0",
     "eslint-plugin-qwik": "latest",
     "prettier": "^3.2.4",
-    "release-it": "^17.0.5",
+    "release-it": "^17.1.1",
     "typescript": "5.3.3",
     "undici": "*",
     "vite": "^5.0.12",
-    "vite-tsconfig-paths": "^4.2.1"
+    "vite-tsconfig-paths": "^4.2.1",
+    "vitest": "^0.34.6"
   },
   "peerDependencies": {
     "@builder.io/qwik": "^1.4.5",
@@ -76,6 +78,6 @@
     "lucia": "^3.0.1"
   },
   "dependencies": {
-    "oslo": "^1.1.1"
+    "oslo": "^1.1.3"
   }
 }
