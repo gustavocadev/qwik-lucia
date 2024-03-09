@@ -199,11 +199,8 @@ const session = sharedMap.get('session');
 Example
 
 ```tsx
-import { handleRequest } from '~/server/lucia';
-
 export const isUserLoggedIn = routeLoader$(
   async ({ cookie, sharedMap, redirect }) => {
-    const authRequest = handleRequest({ cookie });
     const user = sharedMap.get('user');
     const session = sharedMap.get('session');
 
