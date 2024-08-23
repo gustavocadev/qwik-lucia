@@ -30,10 +30,7 @@
       "types": "./lib-types/index.d.ts"
     }
   },
-  "files": [
-    "lib",
-    "lib-types"
-  ],
+  "files": ["lib", "lib-types"],
   "engines": {
     "node": ">=15.0.0"
   },
@@ -75,7 +72,7 @@
   "peerDependencies": {
     "@builder.io/qwik": "^1.4.5",
     "@builder.io/qwik-city": "^1.4.5",
-    "lucia": "^3.0.1"
+    "lucia": "^3.2.0"
   },
   "dependencies": {
     "oslo": "^1.1.3"
