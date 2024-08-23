@@ -52,8 +52,8 @@
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "1.5.1",
-    "@builder.io/qwik-city": "1.5.1",
+    "@builder.io/qwik": "1.8.0",
+    "@builder.io/qwik-city": "1.8.0",
     "@types/eslint": "^8.56.2",
     "@types/node": "^20.11.6",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
@@ -70,8 +70,8 @@
     "vitest": "^0.34.6"
   },
   "peerDependencies": {
-    "@builder.io/qwik": "^1.4.5",
-    "@builder.io/qwik-city": "^1.4.5",
+    "@builder.io/qwik": "^1.8.0",
+    "@builder.io/qwik-city": "^1.8.0",
     "lucia": "^3.2.0"
   },
   "dependencies": {
